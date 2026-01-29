@@ -71,6 +71,50 @@
             top: 0;
             z-index: 2;
         }
+        
+        .small-table {
+            width: 18%;
+            /* réduit la largeur */
+            margin-right: auto;
+            /* reste aligné à gauche */
+        }
+        
+        .small-table th {
+            background: #f38a21;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        
+        .small-table td {
+            text-align: left;
+            font-size: 13px;
+            color: black;
+            background: #21f35d;
+        }
+        
+        .tables-row {
+            display: flex;
+            gap: 20px;
+            /* espace entre les tableaux */
+            align-items: flex-start;
+        }
+        
+        .table-left {
+            width: 35%;
+            /* petit tableau */
+        }
+        
+        .table-right {
+            width: 65%;
+            /* grand tableau */
+        }
+        
+        .table-left table,
+        .table-right table {
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -89,9 +133,33 @@
 
     <script>
         // ===== Données =====
+        const smallTable2024 = [
+            ["1", "ANDREVOREVO", "5", "11"],
+            ["2", "ANKARAMY BE", "9", "21"],
+            ["3", "BEFOTAKA NORD", "15", "51"],
+            ["4", "MAROMANDIA", "8", "25"],
+            ["5", "MAROVANTAZA", "7", "23"],
+            ["6", "AMBODIMADIRO ", "2", "7"],
+            ["7", "AMBODIMANDRESY ", "3", "6"],
+            ["8", "AMPANDRIKILANDY", "8", "24"],
+            ["9", "ANDREBA", "1", "2"],
+            ["10", "ANJIAMANGIRINA ", "4", "9"],
+            ["11", "ANKERIKA ", "6", "18"],
+            ["12", "ANTSAHABE", "8", "17"],
+            ["13", "ANTSOHIHY", "3", "9"],
+            ["14", "AMBOHITOAKA", "16", "47"],
+            ["15", "MAMPIKONY I", "4", "12"],
+            ["16", "MAMPIKONY II", "3", "9"],
+            ["17", "AMPARIHY", "1", "3"],
+            ["18", "PORT-BERGE II", "4", "12"],
+            ["19", "TSARAHASINA", "2", "3"],
+
+            // ajoute jusqu'à 20 lignes si tu veux
+        ];
         const data = {
             2024: {
-                "COLLECTE DES VOLONTAIRES ANTENES": [
+                "COLLECTE DES VOLONTAIRES ANTENNES": [
+
                     ["1", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "DERMAN", "0328463554"],
                     ["2", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "MARINY CLEMENTINE", "0322612200"],
                     ["3", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "RASOARIMANANA THEOVALINE ALVINAN", "0327295402/0348316163"],
@@ -143,12 +211,6 @@
                     ["49", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "ZAFINERA", ""],
                     ["50", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "RAZAFINDRASOA MARINETTE", ""],
                     ["51", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "CLAODE DENNE MACIO", "0374311286"],
-                    ["52", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "ROMEO CALVIN", "0347512421"],
-                    ["53", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "ZAFINJARA VENIS", "0385042942"],
-                    ["54", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "MARIE MADELEINE", "0340583520"],
-                    ["55", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "RAZAFINDRASOA CHARLINE CLAUDINE TRYPSINE", "0345074337"],
-                    ["56", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "HOZARA CLAUTILDE FLORENCIA", "0321649088"],
-                    ["57", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "ANGELA", ""],
                     ["58", "ANALALAVA", "MAROVANTAZA", "AMBODIMABIBO", "MAMISOA VICTORINE", ""],
                     ["59", "ANALALAVA", "MAROVANTAZA", "AMBODIMABIBO", "RABENANDRASANA FLORAND", ""],
                     ["60", "ANALALAVA", "MAROVANTAZA", "ANDRANOMATANA", "LEA", ""],
@@ -200,27 +262,41 @@
                     ["106", "ANALALAVA", "ANDREVOREVO", "AMBALABE", "RAOLINE ELARTE FELICIE", "0387038864"],
                     ["107", "ANALALAVA", "ANDREVOREVO", "MAHASALAMA", "RAZANAMALALA MARGUERRITE", "0342849554"],
                     ["108", "ANALALAVA", "ANDREVOREVO", "MAHASALAMA", "RAZAFINDRAMANANA JOSEPH ROMITEX", "0346297600"],
-                    ["109", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "RASOANIRINA FLORENTINE", "0330567121"],
-                    ["110", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "RAVAOTSINAMPOIZINA FIDISOA JULIE", "0347249298"],
-                    ["111", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "HAINGONIRAINY VALISOA JOELINE", "0346641395"],
-                    ["112", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RAKOTONIRINA JULIEN", "0344706703"],
-                    ["113", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RANDRIAMANANA PATRICIA", "0349723915"],
-                    ["114", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RASOANANTENAINA JOSIANE", "0386472512"],
-                    ["115", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "RAZANAMALALA PERLINE", "0324592076/0344580156"],
-                    ["116", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "RASENDRASOA MARIE ANGELE", "03421562181"],
-                    ["117", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "SIKIMBOLANOMENJANAHARY VAVIZOKY JOCELYNE", "0385862181"],
-                    ["118", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "RAHOELY JOCELYN", "0348639973"],
-                    ["119", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "DELPHINE", "0349811502"],
-                    ["120", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "RAZAFINDRAHANTA NOELINE", "0341675230"],
-                    ["121", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "STEPHAN MARIE CANNE", "0347329426/0384280968"],
-                    ["122", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "TOVONAINA LANZIZI", "0341972016"],
-                    ["123", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "SAMINA HELENE", "0341412688/0330905443"],
-                    ["124", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "PAUL FELIX", "0384280933/0341959334"],
-                    ["125", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "TEFINDRAZANA SEBASTIEN", "0383557641"],
-                    ["126", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "RAFANOMEZANTSOA GISELE", "0339588499"],
-                    ["127", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "RAKOTOSONA TOKY PATRICK", "0384280935/0384280933"],
-                    ["128", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "PASCAL", "0381355629"],
-                    ["129", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "TARAZANDRY JEAN DAULLIN", "0387219231"],
+                    ["175", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "DJIADY RASOAMANANJARA ANITHA", "034 13 304 07"],
+                    ["176", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "ANDRIAMAGNASINA FERRA MARCO", "034 13 304 07"],
+                    ["177", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "VITAZARA MARIE ELINE", ""],
+                    ["178", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "SOAMAZAVA DONALDINE EMMA", ""],
+                    ["179", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "RAZAFINDRAMANANA GIGÈLE FÉLICITÉ", ""],
+                    ["180", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "NOROSOA  AUGUSTINE ", "032 47 099 73"],
+                    ["181", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "HERMAN JEAN COPERTINO", "038 97 610 78"],
+                    ["182", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "MAHEFA ALPHIN ", ""],
+                    ["183", "ANALALAVA", "MAROMANDIA", "LABANDY", "SAMSIA BEN CHARIFFE AT MAN", "034 26 545 67"],
+                    ["184", "ANALALAVA", "MAROMANDIA", "LABANDY", "RASOA JUSTINE", "034 44 021 43"],
+                    ["185", "ANALALAVA", "MAROMANDIA", "LABANDY", "TOMBOSOA RICHNAH", "032 97 244 31"],
+                    ["186", "ANALALAVA", "MAROMANDIA", "MAKOANY", "MAMIZARA GERALDINE", "034 48 105 97"],
+                    ["187", "ANALALAVA", "MAROMANDIA", "MAKOANY", "RSOANDRIAKA FLORINE", "032 59 362 01"],
+                    ["188", "ANALALAVA", "MAROMANDIA", "MAKOANY", "SABRINA", "032 48 926 40"],
+                    ["189", "ANALALAVA", "MAROMANDIA", "AMPONOLAHY", " RANDRIANASOLO CHARLES", "034 14 562 71"],
+                    ["190", "ANALALAVA", "MAROMANDIA", "AMPANOLAHY", "GUSELE", ""],
+                    ["191", "ANALALAVA", "MAROMANDIA", "AMPANOLAHY", "RANDRIAMANANJARA CHARLES CHRYSNO", ""],
+                    ["192", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "ZAFIRAHITA MANANJANDRY", "034 02 725 79"],
+                    ["193", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "NOROVELO LUCIA", ""],
+                    ["194", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "RASOAMANANA JOSLINE", ""],
+                    ["195", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "DJIADY RASOAMANANJARA ANITHA", "034 13 304 07"],
+                    ["196", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "ANDRIAMAGNASINA FERRA MARCO", "034 13 304 07"],
+                    ["197", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "JAOROBY ", "033 13 801 39"],
+                    ["198", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "DJAO MARCEL", "034 23 352 60"],
+                    ["199", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "DJIAZILLA", "032 20 712 78"],
+                    ["280", "ANALALAVA", "ANKARAMY BE", "ANALANAN-TSOA", "HAMBAZARA ", ""],
+                    ["281", "ANALALAVA", "ANKARAMY BE", "ANALANAN-TSOA", "SOANJARA VICTORINE ", ""],
+                    ["282", "ANALALAVA", "ANKARAMY BE", "AMBODY AVIAVY ", "RASOANAIVO ODETTE ", ""],
+                    ["283", "ANALALAVA", "ANKARAMY BE", "AMBODY AVIAVY ", "RABEMIARINJATOVO JEAN ROLAND ", "034 99 145 74"],
+                    ["52", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "ROMEO CALVIN", "0347512421"],
+                    ["53", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "ZAFINJARA VENIS", "0385042942"],
+                    ["54", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "MARIE MADELEINE", "0340583520"],
+                    ["55", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "RAZAFINDRASOA CHARLINE CLAUDINE TRYPSINE", "0345074337"],
+                    ["56", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "HOZARA CLAUTILDE FLORENCIA", "0321649088"],
+                    ["57", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "ANGELA", ""],
                     ["130", "ANTSOHIHY", "ANKERIKA ", "AMBIKY", "SEVAMANANA EMILIENE", "034 72 194 24"],
                     ["131", "ANTSOHIHY", "ANKERIKA ", "AMBIKY", "HERITA DOVIC NARDINOT", "034 25 52 131"],
                     ["132", "ANTSOHIHY", "ANKERIKA ", "AMBIKY", "NARSOLO JERRY MARIO", "034 68 847 76"],
@@ -263,34 +339,6 @@
                     ["169", "ANTSOHIHY", "ANTSOHIHY", "AMBALABE OUEST", "RATSARA FRANCOIS NOSELIN ", "032 99 339 09"],
                     ["170", "ANTSOHIHY", "ANTSOHIHY", "AMBALABE OUEST", "RATSARA IZIDINE LARIOT", "032 39 591 97"],
                     ["171", "ANTSOHIHY", "ANTSOHIHY", "AMBALABE OUEST", "VITAMANANA MICKAEL MAXIMIN", "034 99 555 52"],
-                    ["172", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "RASOA MALALA FIDELINE", ""],
-                    ["173", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "JAOZOKY ", ""],
-                    ["174", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "SOLANGE", ""],
-                    ["175", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "DJIADY RASOAMANANJARA ANITHA", "034 13 304 07"],
-                    ["176", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "ANDRIAMAGNASINA FERRA MARCO", "034 13 304 07"],
-                    ["177", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "VITAZARA MARIE ELINE", ""],
-                    ["178", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "SOAMAZAVA DONALDINE EMMA", ""],
-                    ["179", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "RAZAFINDRAMANANA GIGÈLE FÉLICITÉ", ""],
-                    ["180", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "NOROSOA  AUGUSTINE ", "032 47 099 73"],
-                    ["181", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "HERMAN JEAN COPERTINO", "038 97 610 78"],
-                    ["182", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "MAHEFA ALPHIN ", ""],
-                    ["183", "ANALALAVA", "MAROMANDIA", "LABANDY", "SAMSIA BEN CHARIFFE AT MAN", "034 26 545 67"],
-                    ["184", "ANALALAVA", "MAROMANDIA", "LABANDY", "RASOA JUSTINE", "034 44 021 43"],
-                    ["185", "ANALALAVA", "MAROMANDIA", "LABANDY", "TOMBOSOA RICHNAH", "032 97 244 31"],
-                    ["186", "ANALALAVA", "MAROMANDIA", "MAKOANY", "MAMIZARA GERALDINE", "034 48 105 97"],
-                    ["187", "ANALALAVA", "MAROMANDIA", "MAKOANY", "RSOANDRIAKA FLORINE", "032 59 362 01"],
-                    ["188", "ANALALAVA", "MAROMANDIA", "MAKOANY", "SABRINA", "032 48 926 40"],
-                    ["189", "ANALALAVA", "MAROMANDIA", "AMPONOLAHY", " RANDRIANASOLO CHARLES", "034 14 562 71"],
-                    ["190", "ANALALAVA", "MAROMANDIA", "AMPANOLAHY", "GUSELE", ""],
-                    ["191", "ANALALAVA", "MAROMANDIA", "AMPANOLAHY", "RANDRIAMANANJARA CHARLES CHRYSNO", ""],
-                    ["192", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "ZAFIRAHITA MANANJANDRY", "034 02 725 79"],
-                    ["193", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "NOROVELO LUCIA", ""],
-                    ["194", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "RASOAMANANA JOSLINE", ""],
-                    ["195", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "DJIADY RASOAMANANJARA ANITHA", "034 13 304 07"],
-                    ["196", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "ANDRIAMAGNASINA FERRA MARCO", "034 13 304 07"],
-                    ["197", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "JAOROBY ", "033 13 801 39"],
-                    ["198", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "DJAO MARCEL", "034 23 352 60"],
-                    ["199", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "DJIAZILLA", "032 20 712 78"],
                     ["200", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRIANA I", "ANGE FLORENTINE RAZANATSOA ", "038 93 412 45"],
                     ["201", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA I", "ROKIA", "034 96 591 86"],
                     ["202", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA I", "SOAMANESY ", "038 89 643 34"],
@@ -326,21 +374,36 @@
                     ["232", "ANTSOHIHY", "ANTSAHABE", "ANDENGONDROY", "RANAVOSON SETTE JOSE BIEN AIME", ""],
                     ["233", "ANTSOHIHY", "ANTSAHABE", "ANDENGONDROY", "RICHIARIVELO FRANCKLIN", ""],
                     ["234", "ANTSOHIHY", "ANTSAHABE", "ANDENGONDROY", "RANAONIRINA LEANDRETTE ", "034 15 788 80"],
-                    ["235", "PORT-BERGÉ", "PORT-BERGÉ II", "LABANDY", "RAMILI JENNY SANDRA", "034 70 687 93"],
-                    ["236", "PORT-BERGÉ", "PORT-BERGÉ II", "LABANDY", "RAZAFINDRABAO ROBERTINE", "034 07 918 72"],
-                    ["237", "PORT-BERGÉ", "PORT-BERGÉ II", "LABANDY", "RASOANANDRASANA LOUISE", "038 41 158 94"],
-                    ["238", "PORT-BERGÉ", "PORT-BERGÉ II", "ANTANAMBAOVAO", "ZARAMANANA BERNARD ANDRONIQUE", "034 46 784 12"],
-                    ["239", "PORT-BERGÉ", "PORT-BERGÉ II", "ANTANAMBAOVAO", "TSARAHOSY PAQUERETTE ZOEE", "034 27 103 60"],
-                    ["240", "PORT-BERGÉ", "PORT-BERGÉ II", "ANTANAMBAOVAO", "RABEMAHAFALY SOAZAFY BERIKA", "038 98 028 67"],
-                    ["241", "PORT-BERGÉ", "PORT-BERGÉ II", "PORT-BERGE BAS", "NORDINE JEAN", "034 37 275 12"],
-                    ["242", "PORT-BERGÉ", "PORT-BERGÉ II", "PORT-BERGE BAS", "RAZANAMIANDRISOA ELODIE", "034 67 438 21"],
-                    ["243", "PORT-BERGÉ", "PORT-BERGÉ II", "PORT-BERGE BAS", "RASOLONDRAMASY FLAVIEN", "034 03 744 56"],
-                    ["244", "PORT-BERGÉ", "AMPARIHY", "AMPARIHY", "ANTONJARA TILAHY ABEL", "034 02 442 20"],
-                    ["245", "PORT-BERGÉ", "AMPARIHY", "AMPARIHY", "FALIMAMY JEAN CHRY ", "038 07 750 86"],
-                    ["246", "PORT-BERGÉ", "AMPARIHY", "AMPARIHY", "FALISOA ", "034 99 576 12"],
-                    ["247", "PORT-BERGÉ", "PORT-BERGÉ II", "MAROMALANDY", "AMBININJARA MARIUS ETORI", "034 90 950 46"],
-                    ["248", "PORT-BERGÉ", "PORT-BERGÉ II", "MAROMALANDY", "JEAN SELINA", "034 87 624 54"],
-                    ["249", "PORT-BERGÉ", "PORT-BERGÉ II", "MAROMALANDY", "TODISOA HASINA BRUNO", "034 55 486 55"],
+                    ["301", "ANTSOHIHY", "ANDREBA", "ANKOZANY", "TSARAHEVITRA FERDINAND", "0346046868"],
+                    ["302", "ANTSOHIHY", "ANDREBA", "ANKOZANY", "RASAMSON CLAUDE", "0343733921"],
+                    ["303", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBODIMANDRESY", "CLAUDE", "0340502150"],
+                    ["304", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBODIMANDRESY", "MAURICE ALIDA SYLVERT", "0340698168"],
+                    ["305", "ANTSOHIHY", "AMBODIMANDRESY ", "ANTAMBOHITRA", "BELIN", "0380575971"],
+                    ["306", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "DJAOMANAMBINA", "0387205171"],
+                    ["307", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "AMBININTSOA JUD EZRA", "0384537212"],
+                    ["308", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "NORIZINY", "0341151655"],
+                    ["309", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "RASOAMANANTSITO GIBRIA", ""],
+                    ["109", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "RASOANIRINA FLORENTINE", "0330567121"],
+                    ["110", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "RAVAOTSINAMPOIZINA FIDISOA JULIE", "0347249298"],
+                    ["111", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "HAINGONIRAINY VALISOA JOELINE", "0346641395"],
+                    ["112", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RAKOTONIRINA JULIEN", "0344706703"],
+                    ["113", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RANDRIAMANANA PATRICIA", "0349723915"],
+                    ["114", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RASOANANTENAINA JOSIANE", "0386472512"],
+                    ["115", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "RAZANAMALALA PERLINE", "0324592076/0344580156"],
+                    ["116", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "RASENDRASOA MARIE ANGELE", "03421562181"],
+                    ["117", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "SIKIMBOLANOMENJANAHARY VAVIZOKY JOCELYNE", "0385862181"],
+                    ["118", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "RAHOELY JOCELYN", "0348639973"],
+                    ["119", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "DELPHINE", "0349811502"],
+                    ["120", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "RAZAFINDRAHANTA NOELINE", "0341675230"],
+                    ["121", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "STEPHAN MARIE CANNE", "0347329426/0384280968"],
+                    ["122", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "TOVONAINA LANZIZI", "0341972016"],
+                    ["123", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "SAMINA HELENE", "0341412688/0330905443"],
+                    ["124", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "PAUL FELIX", "0384280933/0341959334"],
+                    ["125", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "TEFINDRAZANA SEBASTIEN", "0383557641"],
+                    ["126", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "RAFANOMEZANTSOA GISELE", "0339588499"],
+                    ["127", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "RAKOTOSONA TOKY PATRICK", "0384280935/0384280933"],
+                    ["128", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "PASCAL", "0381355629"],
+                    ["129", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "TARAZANDRY JEAN DAULLIN", "0387219231"],
                     ["250", "MAMPIKONY", "AMBOHITOAKA", "AMBOHITOAKA", "RAZANADRAHA OLIVIER", "0388258490"],
                     ["251", "MAMPIKONY", "AMBOHITOAKA", "AMBOHITOAKA", "RABENANDRASANA FERDINAND MICKAEL", "0342230582"],
                     ["252", "MAMPIKONY", "AMBOHITOAKA", "AMBOHITOAKA", "JEAN CHRISTOPHE", "0388532754"],
@@ -371,10 +434,6 @@
                     ["277", "MAMPIKONY", "AMBOHITOAKA", "SOBERAKA", "RABEZARA BERTRAND", "0337259026"],
                     ["278", "MAMPIKONY", "AMBOHITOAKA", "SOBERAKA", "MISE ALBERT", "0347583394"],
                     ["279", "MAMPIKONY", "AMBOHITOAKA", "SOBERAKA", "ANDRINIRINA RALIJAONINA VALERIEN", "0340127383"],
-                    ["280", "ANALALAVA", "ANKARAMY", "ANALANAN-TSOA", "HAMBAZARA ", ""],
-                    ["281", "ANALALAVA", "ANKARAMY", "ANALANAN-TSOA", "SOANJARA VICTORINE ", ""],
-                    ["282", "ANALALAVA", "ANKARAMY", "AMBODY AVIAVY ", "RASOANAIVO ODETTE ", ""],
-                    ["283", "ANALALAVA", "ANKARAMY", "AMBODY AVIAVY ", "RABEMIARINJATOVO JEAN ROLAND ", "034 99 145 74"],
                     ["284", "MAMPIKONY", "AMBOHITOAKA", "TANETILAVA ", "RANDRIANASOLO NAJA  ALEXANDRE ", "034 18 155 54"],
                     ["285", "MAMPIKONY", "AMBOHITOAKA", "TANETILAVA ", "BOTOSOA JEAN LOUIS ", "034 97 174 87 "],
                     ["286", "MAMPIKONY", "AMBOHITOAKA", "TANETILAVA ", "RAKOTONDRASINA DESIRE", "038 58 901 17"],
@@ -392,15 +451,25 @@
                     ["298", "MAMPIKONY", "AMBOHITOAKA", "ANTSOHELY ", "RANDRIANOELY NOUCELA", "038 76 027 19"],
                     ["299", "MAMPIKONY", "AMBOHITOAKA", "BEKITOTO", "RAKOTONIAINA MODESTE ", "034 96 702 58"],
                     ["300", "MAMPIKONY", "AMBOHITOAKA", "BEKITOTO", "ANDRIANIRINA MAMITIANA CRÉTELE", "034 13 360 31"],
-                    ["301", "ANTSOHIHY", "ANDREBA", "ANKOZANY", "TSARAHEVITRA FERDINAND", "0346046868"],
-                    ["302", "ANTSOHIHY", "ANDREBA", "ANKOZANY", "RASAMSON CLAUDE", "0343733921"],
-                    ["303", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBODIMANDRESY", "CLAUDE", "0340502150"],
-                    ["304", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBODIMANDRESY", "MAURICE ALIDA SYLVERT", "0340698168"],
-                    ["305", "ANTSOHIHY", "AMBODIMANDRESY ", "ANTAMBOHITRA", "BELIN", "0380575971"],
-                    ["306", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "DJAOMANAMBINA", "0387205171"],
-                    ["307", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "AMBININTSOA JUD EZRA", "0384537212"],
-                    ["308", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "NORIZINY", "0341151655"],
-                    ["309", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "RASOAMANANTSITO GIBRIA", ""],
+                    ["235", "PORT-BERGE", "PORT-BERGE II", "LABANDY", "RAMILI JENNY SANDRA", "034 70 687 93"],
+                    ["236", "PORT-BERGE", "PORT-BERGE II", "LABANDY", "RAZAFINDRABAO ROBERTINE", "034 07 918 72"],
+                    ["237", "PORT-BERGE", "PORT-BERGE II", "LABANDY", "RASOANANDRASANA LOUISE", "038 41 158 94"],
+                    ["238", "PORT-BERGE", "PORT-BERGE II", "ANTANAMBAOVAO", "ZARAMANANA BERNARD ANDRONIQUE", "034 46 784 12"],
+                    ["239", "PORT-BERGE", "PORT-BERGE II", "ANTANAMBAOVAO", "TSARAHOSY PAQUERETTE ZOEE", "034 27 103 60"],
+                    ["240", "PORT-BERGE", "PORT-BERGE II", "ANTANAMBAOVAO", "RABEMAHAFALY SOAZAFY BERIKA", "038 98 028 67"],
+                    ["241", "PORT-BERGE", "PORT-BERGE II", "PORT-BERGE BAS", "NORDINE JEAN", "034 37 275 12"],
+                    ["242", "PORT-BERGE", "PORT-BERGE II", "PORT-BERGE BAS", "RAZANAMIANDRISOA ELODIE", "034 67 438 21"],
+                    ["243", "PORT-BERGE", "PORT-BERGE II", "PORT-BERGE BAS", "RASOLONDRAMASY FLAVIEN", "034 03 744 56"],
+                    ["244", "PORT-BERGE", "AMPARIHY", "AMPARIHY", "ANTONJARA TILAHY ABEL", "034 02 442 20"],
+                    ["245", "PORT-BERGE", "AMPARIHY", "AMPARIHY", "FALIMAMY JEAN CHRY ", "038 07 750 86"],
+                    ["246", "PORT-BERGE", "AMPARIHY", "AMPARIHY", "FALISOA ", "034 99 576 12"],
+                    ["247", "PORT-BERGE", "PORT-BERGE II", "MAROMALANDY", "AMBININJARA MARIUS ETORI", "034 90 950 46"],
+                    ["248", "PORT-BERGE", "PORT-BERGE II", "MAROMALANDY", "JEAN SELINA", "034 87 624 54"],
+                    ["249", "PORT-BERGE", "PORT-BERGE II", "MAROMALANDY", "TODISOA HASINA BRUNO", "034 55 486 55"],
+                    ["172", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "RASOA MALALA FIDELINE", ""],
+                    ["173", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "JAOZOKY ", ""],
+                    ["174", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "SOLANGE", ""],
+
 
                 ],
 
@@ -451,29 +520,62 @@
 
             // Si c'est un tableau
             if (Array.isArray(content)) {
-                let t = `<table>
-      <tr>Informations des 309 volontaires antenes
+
+                // ===== TABLEAU 3 COLONNES =====
+                let t1 = `<table class="small-table">
+    <thead>
+      <tr>
         <th>N°</th>
-        <th>DISTRICT</th>
-        <th>COMMUNE</th>
-        <th>FOKONTANY</th>
-        <th>NOM ET PRENOMS</th>
-        <th>CONTACT</th>
-      </tr>`;
-                content.forEach(r => {
-                    t += `<tr>
-        <td>${r[0]}</td>
-        <td>${r[1]}</td>
-        <td>${r[2]}</td>
-        <td>${r[3]}</td>
-        <td>${r[4]}</td>
-        <td>${r[5]}</td>
-      </tr>`;
+        <th>Commune</th>
+        <th>Nb Fokontany</th>
+        <th>Nb Volontaire antenne</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+                smallTable2024.forEach(r => {
+                    t1 += `<tr>
+      <td>${r[0]}</td>
+      <td>${r[1]}</td>
+      <td>${r[2]}</td>
+      <td>${r[3]}</td>
+    </tr>`;
                 });
-                t += "</table>";
-                box.innerHTML = t;
-            } else {
-                box.innerHTML = content;
+
+                t1 += `</tbody></table><br><br>`;
+
+                // ===== TABLEAU 6 COLONNES =====
+                let t2 = `<table>
+    <thead>
+      <tr>
+        <th>District</th>
+        <th>Commune</th>
+        <th>Fokontany</th>
+        <th>ID_unité</th>
+        <th>Nom et prénom</th>
+        <th>Contact</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+                content.forEach(r => {
+                    t2 += `<tr>
+      <td>${r[0]}</td>
+      <td>${r[1]}</td>
+      <td>${r[2]}</td>
+      <td>${r[3]}</td>
+      <td>${r[4]}</td>
+      <td>${r[5]}</td>
+    </tr>`;
+                });
+
+                t2 += `</tbody></table>`;
+
+                box.innerHTML = `
+<div class="tables-row">
+   <div class="table-left">${t1}</div>
+   <div class="table-right">${t2}</div>
+</div>`;
             }
         }
     </script>
