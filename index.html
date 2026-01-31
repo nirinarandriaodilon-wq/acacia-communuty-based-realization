@@ -3,583 +3,321 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Activities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Archives</title>
+
     <style>
         body {
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            padding: 0px;
-            background: white;
+            margin: 0;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, sans-serif;
+            background-color: rgb(247, 247, 243);
+            font-size: small;
         }
         
-        .main-buttons button {
-            padding: 12px 20px;
-            margin: 5px;
-            font-size: 10px;
-            cursor: pointer;
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgb(2, 83, 78);
+            padding: 10px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         
-        .main-buttons button.active-year {
-            background: #2196f3;
-            color: white;
+        .year-buttons,
+        .activity-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         
-        .sub-buttons {
-            margin-top: 0px;
-            margin-left: 0cm;
-            display: none;
-        }
-        
-        .sub-buttons button {
-            padding: 10px 15px;
-            margin: 5px;
+        button {
+            padding: 8px 14px;
             border: none;
-            background: #4caf50;
-            color: white;
-            border-radius: 6px;
+            background: #ddd;
             cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
         }
         
-        .sub-buttons button.active {
-            background: #2196f3;
+        button.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .activity-buttons {
+            margin-top: 8px;
         }
         
         .content {
-            margin-left: 0cm;
-            margin-top: 0px;
-            padding: 0px;
-            border: 1px solid #ccc;
-            display: none;
-            max-height: 550px;
-            overflow: auto;
+            margin-top: 78px;
+            padding: 15px;
+            text-align: left;
         }
         
         table {
             border-collapse: collapse;
-            width: 100%;
+            width: auto;
+            margin-top: 10px;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid #000;
         }
         
         th,
         td {
-            border: 1px solid #ccc;
-            padding: 6px;
+            padding: 3px;
         }
         
-        table th {
-            background: #2196f3;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 2;
+        th {
+            border: 1px solid #000;
+            text-align: center;
+            background: rgb(167, 170, 170);
         }
         
-        .small-table {
-            width: 18%;
-            /* réduit la largeur */
-            margin-right: auto;
-            /* reste aligné à gauche */
+        td.number {
+            text-align: center;
         }
         
-        .small-table th {
-            background: #f38a21;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 2;
+        td.total {
+            text-align: center;
+            background: rgb(167, 170, 170);
         }
         
-        .small-table td {
-            text-align: left;
-            font-size: 13px;
-            color: black;
-            background: #21f35d;
-        }
-        
-        .tables-row {
+        .row {
             display: flex;
-            gap: 20px;
-            /* espace entre les tableaux */
+            gap: 130px;
             align-items: flex-start;
+            flex-wrap: wrap;
         }
         
-        .table-left {
-            width: 35%;
-            /* petit tableau */
+        .side-image {
+            height: auto;
+            width: 70%;
+            max-width: 65%;
+            border-radius: 6px;
         }
         
-        .table-right {
-            width: 65%;
-            /* grand tableau */
+        img {
+            max-width: 100%;
+            margin-top: 10px;
         }
         
-        .table-left table,
-        .table-right table {
-            width: 100%;
+        a.file-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        @media (max-width:600px) {
+            button {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="main-buttons">
-        <button onclick="showYear(2024,this)">2024</button>
-        <button onclick="showYear(2025,this)">2025</button>
-        <button onclick="showYear(2026,this)">2026</button>
-        <button onclick="showYear(2027,this)">2027</button>
-        <button onclick="showYear(2028,this)">2028</button>
+    <div class="top-bar">
+
+        <div class="year-buttons" id="years">
+        </div>
+
+        <div class="activity-buttons" id="activities"></div>
+
     </div>
 
-    <div id="subContainer" class="sub-buttons"></div>
-    <div id="contentBox" class="content"></div>
+    <div class="content" id="content">
+        <!-- Contenu affiché ici -->
+    </div>
 
     <script>
-        // ===== Données =====
-        const smallTable2024 = [
-            ["1", "ANDREVOREVO", "5", "11"],
-            ["2", "ANKARAMY BE", "9", "21"],
-            ["3", "BEFOTAKA NORD", "15", "51"],
-            ["4", "MAROMANDIA", "8", "25"],
-            ["5", "MAROVANTAZA", "7", "23"],
-            ["6", "AMBODIMADIRO ", "2", "7"],
-            ["7", "AMBODIMANDRESY ", "3", "6"],
-            ["8", "AMPANDRIKILANDY", "8", "24"],
-            ["9", "ANDREBA", "1", "2"],
-            ["10", "ANJIAMANGIRINA ", "4", "9"],
-            ["11", "ANKERIKA ", "6", "18"],
-            ["12", "ANTSAHABE", "8", "17"],
-            ["13", "ANTSOHIHY", "3", "9"],
-            ["14", "AMBOHITOAKA", "16", "47"],
-            ["15", "MAMPIKONY I", "4", "12"],
-            ["16", "MAMPIKONY II", "3", "9"],
-            ["17", "AMPARIHY", "1", "3"],
-            ["18", "PORT-BERGE II", "4", "12"],
-            ["19", "TSARAHASINA", "2", "3"],
+        const years = [2024, 2025, 2026, 2027, 2028];
 
-            // ajoute jusqu'à 20 lignes si tu veux
-        ];
-        const data = {
-            2024: {
-                "COLLECTE DES VOLONTAIRES ANTENNES": [
+        const activitiesByYear = {
+            2024: [
+                "Collecte Volontaires antennes",
+                "No information"
+            ],
+            2025: [
+                "Atelier EVCA",
+                "Validation données EVCA et cartographie de vulnerabilité",
+                "Formation des volontaires CRM sur le Changement climatique",
+                "Atelier elaboration PUC",
+                "Atelier validation PUC",
+                "Formation des olontaires facilitateurs de la formation ELS",
+                "Reunion elaboration PAP",
+                "Formation ELS"
 
-                    ["1", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "DERMAN", "0328463554"],
-                    ["2", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "MARINY CLEMENTINE", "0322612200"],
-                    ["3", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "RASOARIMANANA THEOVALINE ALVINAN", "0327295402/0348316163"],
-                    ["4", "ANALALAVA", "BEFOTAKA NORD", "ANTANIMBARIBE", "SOAVINJARA BIRIZIKY", "0349730496"],
-                    ["5", "ANALALAVA", "BEFOTAKA NORD", "AMBAPAKA", "RAZANAJAFY MARIE CLAUDINE", "0387030112"],
-                    ["6", "ANALALAVA", "BEFOTAKA NORD", "AMBAPAKA", "RAFANOMEZANTSOA OCLARY", "0387030112"],
-                    ["7", "ANALALAVA", "BEFOTAKA NORD", "MANAMBARO", "CATHERINE", "0324971543/0324490176"],
-                    ["8", "ANALALAVA", "BEFOTAKA NORD", "MANAMBARO", "SOANATTE", "0327938264"],
-                    ["9", "ANALALAVA", "BEFOTAKA NORD", "KAMORONGA", "RAZAFIMANDIMBY", "0332312888"],
-                    ["10", "ANALALAVA", "BEFOTAKA NORD", "KAMORONGA", "ZAFIMANDIMBY BIZA FLORETTE", "0325219940"],
-                    ["11", "ANALALAVA", "BEFOTAKA NORD", "TSININGIA", "JULLIETTE", "0331585943"],
-                    ["12", "ANALALAVA", "BEFOTAKA NORD", "TSININGIA", "RAZANAMALALA MIRIA LY NTHIA", "0387929535"],
-                    ["13", "ANALALAVA", "BEFOTAKA NORD", "TSININGIA", "ATONJARA FABRICE", ""],
-                    ["14", "ANALALAVA", "BEFOTAKA NORD", "TSININGIA", "NORINE CLARISSE", "0341316032"],
-                    ["15", "ANALALAVA", "BEFOTAKA NORD", "TSININGIA", "SAFIA", "0328410582/0385204248"],
-                    ["16", "ANALALAVA", "BEFOTAKA NORD", "ANTSAHAFALY", "RAHARIMALALA HORTENCIA", "0325833978"],
-                    ["17", "ANALALAVA", "BEFOTAKA NORD", "ANTSAHAFALY", "MARTIAL", "0347077395"],
-                    ["18", "ANALALAVA", "BEFOTAKA NORD", "MISOROBE", "VAVIZARA", "0381981578"],
-                    ["19", "ANALALAVA", "BEFOTAKA NORD", "MISOROBE", "RAMIARANTSOA VERRETTE PHILOMENE", "0381981578"],
-                    ["20", "ANALALAVA", "BEFOTAKA NORD", "ANTSARIHEZA", "THONI", "0346377666"],
-                    ["21", "ANALALAVA", "BEFOTAKA NORD", "ANTSARIHEZA", "JULIENNE", "0322098607"],
-                    ["22", "ANALALAVA", "BEFOTAKA NORD", "ANTSARIHEZA", "ZARAFENO SOATARA", "0326487615"],
-                    ["23", "ANALALAVA", "BEFOTAKA NORD", "AMBINANY ANDROTRO", "FLOZETTE", "0321557319"],
-                    ["24", "ANALALAVA", "BEFOTAKA NORD", "AMBINANY ANDROTRO", "NAZARATY", "0326640111/0374169142"],
-                    ["25", "ANALALAVA", "BEFOTAKA NORD", "AMBINANY ANDROTRO", "RENE ALBERT", "0374265369"],
-                    ["26", "ANALALAVA", "BEFOTAKA NORD", "AMBINANY ANDROTRO", "LIAZY ESTHER", "0349635224"],
-                    ["27", "ANALALAVA", "BEFOTAKA NORD", "AMBALANTSOTRY", "ZAFINDRAZANA MARIE CLARENCE", "0389280927"],
-                    ["28", "ANALALAVA", "BEFOTAKA NORD", "AMBALANTSOTRY", "VAVIANINA", ""],
-                    ["29", "ANALALAVA", "BEFOTAKA NORD", "AMBALANTSOTRY", "RASOA MARIE BERNADETTE", "0344768937/0331603209"],
-                    ["30", "ANALALAVA", "BEFOTAKA NORD", "AMPOHOARA", "MARIE YVONNE", "0327382100"],
-                    ["31", "ANALALAVA", "BEFOTAKA NORD", "AMPOHOARA", "DOLPHINE", "0344906522"],
-                    ["32", "ANALALAVA", "BEFOTAKA NORD", "AMPOHOARA", "RASOANARIMALALA AMELINE", "0382612565"],
-                    ["33", "ANALALAVA", "BEFOTAKA NORD", "AMBENDRANA", "RASOAZARAHITA JULIENNE MANOMPO", ""],
-                    ["34", "ANALALAVA", "BEFOTAKA NORD", "AMBENDRANA", "MAMITIANA CHAMIELLA", "0346109939"],
-                    ["35", "ANALALAVA", "BEFOTAKA NORD", "AMBENDRANA", "SAHONDRA", "0346109939"],
-                    ["36", "ANALALAVA", "BEFOTAKA NORD", "AMBENDRANA", "RABEMARO OLGA", "0348931585"],
-                    ["37", "ANALALAVA", "BEFOTAKA NORD", "AMBENDRANA", "RASOAFIAVY", "0347284016"],
-                    ["38", "ANALALAVA", "BEFOTAKA NORD", "AMBONDRONA", "FIDIZARA HANRI JOEL", "0389704427"],
-                    ["39", "ANALALAVA", "BEFOTAKA NORD", "AMBONDRONA", "ZARAMINA", "0381057175"],
-                    ["40", "ANALALAVA", "BEFOTAKA NORD", "AMBONDRONA", "SOAMARY", "0335947711"],
-                    ["41", "ANALALAVA", "BEFOTAKA NORD", "AMBONDRONA", "MARIHINDY", "0327247711"],
-                    ["42", "ANALALAVA", "BEFOTAKA NORD", "AMBONDRONA", "FLOGINE CLEMANTINE", "0386537819"],
-                    ["43", "ANALALAVA", "BEFOTAKA NORD", "ANTSOMBOLONA", "MAZIKA", "0386854009"],
-                    ["44", "ANALALAVA", "BEFOTAKA NORD", "ANTSOMBOLONA", "RASOANIRINA EMILIENNE", "0383447134/0326981011"],
-                    ["45", "ANALALAVA", "BEFOTAKA NORD", "ANTSOMBOLONA", "MARIANINA ODETTE", "0327184661"],
-                    ["46", "ANALALAVA", "BEFOTAKA NORD", "ANTSOMBOLONA", "NJAKAMANANA", "0375261547"],
-                    ["47", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "ANISE", "0327481574"],
-                    ["48", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "SOATSARA", "0324782475"],
-                    ["49", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "ZAFINERA", ""],
-                    ["50", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "RAZAFINDRASOA MARINETTE", ""],
-                    ["51", "ANALALAVA", "BEFOTAKA NORD", "ANDAMPY", "CLAODE DENNE MACIO", "0374311286"],
-                    ["58", "ANALALAVA", "MAROVANTAZA", "AMBODIMABIBO", "MAMISOA VICTORINE", ""],
-                    ["59", "ANALALAVA", "MAROVANTAZA", "AMBODIMABIBO", "RABENANDRASANA FLORAND", ""],
-                    ["60", "ANALALAVA", "MAROVANTAZA", "ANDRANOMATANA", "LEA", ""],
-                    ["61", "ANALALAVA", "MAROVANTAZA", "ANDRANOMATANA", "RASOAVONIAINA OLYVETTE", ""],
-                    ["62", "ANALALAVA", "MAROVANTAZA", "ANDRANOMATANA", "MEVAZARA ANYCETTE", ""],
-                    ["63", "ANALALAVA", "MAROVANTAZA", "ANDRANOMATANA", "HENRY MONIQUE ANGELE EDMONDINE", ""],
-                    ["64", "ANALALAVA", "MAROVANTAZA", "ANDRANOMATANA", "ROZINERA", ""],
-                    ["65", "ANALALAVA", "MAROVANTAZA", "MAROVANTAZA", "LALA ARISOA CLAUDETTE", ""],
-                    ["66", "ANALALAVA", "MAROVANTAZA", "MAROVANTAZA", "TSIAVILY HAROSON", ""],
-                    ["67", "ANALALAVA", "MAROVANTAZA", "MAROVANTAZA", "SOAMADAMO GINETTE ", ""],
-                    ["68", "ANALALAVA", "MAROVANTAZA", "MAROVANTAZA", "SOATODY", ""],
-                    ["69", "ANALALAVA", "MAROVANTAZA", "BETSIMIPOAKA", "HIAMOLINE FABIOLA", ""],
-                    ["70", "ANALALAVA", "MAROVANTAZA", "BETSIMIPOAKA", "RAZAFINDRAMAMY GABRIEL", ""],
-                    ["71", "ANALALAVA", "MAROVANTAZA", "BETSIMIPOAKA", "AHAMED MOHAMED", ""],
-                    ["72", "ANALALAVA", "MAROVANTAZA", "BETSIMIPOAKA", "FERDINAND ZOZO", ""],
-                    ["73", "ANALALAVA", "MAROVANTAZA", "ANTANANDAVA", "CHRISTINE", ""],
-                    ["74", "ANALALAVA", "MAROVANTAZA", "ANTANANDAVA", "RASOHAVANA MARIE OLIVIA", ""],
-                    ["75", "ANALALAVA", "MAROVANTAZA", "ANTANANDAVA", "RANDRIANJAFY PARFAIT", ""],
-                    ["76", "ANALALAVA", "MAROVANTAZA", "MANGAOKO", "RABENANDRASANA CHARLUN", ""],
-                    ["77", "ANALALAVA", "MAROVANTAZA", "MANGAOKO", "DJAONIHASINA RAPHAEL", ""],
-                    ["78", "ANALALAVA", "MAROVANTAZA", "MANGAOKO", "VOLANTINE ARLINE", ""],
-                    ["79", "ANALALAVA", "MAROVANTAZA", "AMBODIMAKA", "RABEHANTA JEANOT", ""],
-                    ["80", "ANALALAVA", "MAROVANTAZA", "AMBODIMAKA", "VAVITSARA OLGA", ""],
-                    ["81", "ANALALAVA", "ANKARAMY BE", "ANKARAMY BE", "CLARISSE", "0347264142/0329108754"],
-                    ["82", "ANALALAVA", "ANKARAMY BE", "ANKARAMY BE", "RAZANAMIHANTA NICOLINE", "0325143229"],
-                    ["83", "ANALALAVA", "ANKARAMY BE", "ANKARAMY BE", "MARONDAZA TSIVASOA", "0328518366"],
-                    ["84", "ANALALAVA", "ANKARAMY BE", "ANKARAMY BE", "GEORGETTE", "0344909251/0324957435"],
-                    ["85", "ANALALAVA", "ANKARAMY BE", "ANKARAMIHELY", "TOMBOZAFY RAYMOND", "0383468505/0344093114"],
-                    ["86", "ANALALAVA", "ANKARAMY BE", "AMBALAMANANTY", "RODRIGUE EMMA", "0389321676"],
-                    ["87", "ANALALAVA", "ANKARAMY BE", "AMBALIHA", "ELISABETH", "0342121446"],
-                    ["88", "ANALALAVA", "ANKARAMY BE", "ANKARAMIHELY", "EVARIST", "0345153125"],
-                    ["89", "ANALALAVA", "ANKARAMY BE", "ANTSAHABEMINKO", "EDMOND RESTUDE MANANA", "0342356844"],
-                    ["90", "ANALALAVA", "ANKARAMY BE", "AMBALIHA", "HERILAZA CLAUDIO", "0388195608"],
-                    ["91", "ANALALAVA", "ANKARAMY BE", "ANTSAHABEMINKO", "DIDIER FRANCIS", "0346162590"],
-                    ["92", "ANALALAVA", "ANKARAMY BE", "MAROVATO", "LEDASY", "0340787712"],
-                    ["93", "ANALALAVA", "ANKARAMY BE", "AMBALAMANANTY", "ZARAVELO ANTOINETTE", "0342159773"],
-                    ["94", "ANALALAVA", "ANKARAMY BE", "MAROVATO", "RAVONIAINA FELICITE", "0347152099"],
-                    ["95", "ANALALAVA", "ANKARAMY BE", "BERATY", "RAKOTONJATOVO FLAVIEN", "0341334960/0322140396"],
-                    ["96", "ANALALAVA", "ANKARAMY BE", "BERATY", "SOANAJAINA PRUVOT PASCAL", "0349630348"],
-                    ["97", "ANALALAVA", "ANKARAMY BE", "BERATY", "BEMARIASY EMILIEN", "0341942505/0325416638"],
-                    ["98", "ANALALAVA", "ANDREVOREVO", "MAHASALAMA", "LAIS EMMANUEL", "034 58 632 27"],
-                    ["99", "ANALALAVA", "ANDREVOREVO", "AMBOHOPO", "RABEMANANJARA MAROZENY", "0343304885"],
-                    ["100", "ANALALAVA", "ANDREVOREVO", "ANTSANGAMBATO", "RANDRIAMANASINA ODILON", "0343338994"],
-                    ["101", "ANALALAVA", "ANDREVOREVO", "CENTRAL", "HARISOA PHILOMENE", "0385731586"],
-                    ["102", "ANALALAVA", "ANDREVOREVO", "CENTRAL", "ARMINODDYU DIORIBN", "0381156682"],
-                    ["103", "ANALALAVA", "ANDREVOREVO", "CENTRAL", "RASOAVELO MANDIENNE", ""],
-                    ["104", "ANALALAVA", "ANDREVOREVO", "AMBALABE", "RAZAFINDRAZAKA MICKAEL JEAN DIDIER", ""],
-                    ["105", "ANALALAVA", "ANDREVOREVO", "AMBALABE", "ZAFITSARA JIMICKA", "0383727596"],
-                    ["106", "ANALALAVA", "ANDREVOREVO", "AMBALABE", "RAOLINE ELARTE FELICIE", "0387038864"],
-                    ["107", "ANALALAVA", "ANDREVOREVO", "MAHASALAMA", "RAZANAMALALA MARGUERRITE", "0342849554"],
-                    ["108", "ANALALAVA", "ANDREVOREVO", "MAHASALAMA", "RAZAFINDRAMANANA JOSEPH ROMITEX", "0346297600"],
-                    ["175", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "DJIADY RASOAMANANJARA ANITHA", "034 13 304 07"],
-                    ["176", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "ANDRIAMAGNASINA FERRA MARCO", "034 13 304 07"],
-                    ["177", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "VITAZARA MARIE ELINE", ""],
-                    ["178", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "SOAMAZAVA DONALDINE EMMA", ""],
-                    ["179", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "RAZAFINDRAMANANA GIGÈLE FÉLICITÉ", ""],
-                    ["180", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "NOROSOA  AUGUSTINE ", "032 47 099 73"],
-                    ["181", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "HERMAN JEAN COPERTINO", "038 97 610 78"],
-                    ["182", "ANALALAVA", "MAROMANDIA", "MAHITSIAZO", "MAHEFA ALPHIN ", ""],
-                    ["183", "ANALALAVA", "MAROMANDIA", "LABANDY", "SAMSIA BEN CHARIFFE AT MAN", "034 26 545 67"],
-                    ["184", "ANALALAVA", "MAROMANDIA", "LABANDY", "RASOA JUSTINE", "034 44 021 43"],
-                    ["185", "ANALALAVA", "MAROMANDIA", "LABANDY", "TOMBOSOA RICHNAH", "032 97 244 31"],
-                    ["186", "ANALALAVA", "MAROMANDIA", "MAKOANY", "MAMIZARA GERALDINE", "034 48 105 97"],
-                    ["187", "ANALALAVA", "MAROMANDIA", "MAKOANY", "RSOANDRIAKA FLORINE", "032 59 362 01"],
-                    ["188", "ANALALAVA", "MAROMANDIA", "MAKOANY", "SABRINA", "032 48 926 40"],
-                    ["189", "ANALALAVA", "MAROMANDIA", "AMPONOLAHY", " RANDRIANASOLO CHARLES", "034 14 562 71"],
-                    ["190", "ANALALAVA", "MAROMANDIA", "AMPANOLAHY", "GUSELE", ""],
-                    ["191", "ANALALAVA", "MAROMANDIA", "AMPANOLAHY", "RANDRIAMANANJARA CHARLES CHRYSNO", ""],
-                    ["192", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "ZAFIRAHITA MANANJANDRY", "034 02 725 79"],
-                    ["193", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "NOROVELO LUCIA", ""],
-                    ["194", "ANALALAVA", "MAROMANDIA", "AMBOHIMARINA", "RASOAMANANA JOSLINE", ""],
-                    ["195", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "DJIADY RASOAMANANJARA ANITHA", "034 13 304 07"],
-                    ["196", "ANALALAVA", "MAROMANDIA", "AMPOMAVENTY", "ANDRIAMAGNASINA FERRA MARCO", "034 13 304 07"],
-                    ["197", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "JAOROBY ", "033 13 801 39"],
-                    ["198", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "DJAO MARCEL", "034 23 352 60"],
-                    ["199", "ANALALAVA", "MAROMANDIA", "ANTANANDAVA I", "DJIAZILLA", "032 20 712 78"],
-                    ["280", "ANALALAVA", "ANKARAMY BE", "ANALANAN-TSOA", "HAMBAZARA ", ""],
-                    ["281", "ANALALAVA", "ANKARAMY BE", "ANALANAN-TSOA", "SOANJARA VICTORINE ", ""],
-                    ["282", "ANALALAVA", "ANKARAMY BE", "AMBODY AVIAVY ", "RASOANAIVO ODETTE ", ""],
-                    ["283", "ANALALAVA", "ANKARAMY BE", "AMBODY AVIAVY ", "RABEMIARINJATOVO JEAN ROLAND ", "034 99 145 74"],
-                    ["52", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "ROMEO CALVIN", "0347512421"],
-                    ["53", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "ZAFINJARA VENIS", "0385042942"],
-                    ["54", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA NORD", "MARIE MADELEINE", "0340583520"],
-                    ["55", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "RAZAFINDRASOA CHARLINE CLAUDINE TRYPSINE", "0345074337"],
-                    ["56", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "HOZARA CLAUTILDE FLORENCIA", "0321649088"],
-                    ["57", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA CENTRE", "ANGELA", ""],
-                    ["130", "ANTSOHIHY", "ANKERIKA ", "AMBIKY", "SEVAMANANA EMILIENE", "034 72 194 24"],
-                    ["131", "ANTSOHIHY", "ANKERIKA ", "AMBIKY", "HERITA DOVIC NARDINOT", "034 25 52 131"],
-                    ["132", "ANTSOHIHY", "ANKERIKA ", "AMBIKY", "NARSOLO JERRY MARIO", "034 68 847 76"],
-                    ["133", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA SUD ", "RASOAMALALA ", "034 81 308 94"],
-                    ["134", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA SUD ", "LAZAMANANA FILDIN", "034 81 308 94"],
-                    ["135", "ANTSOHIHY", "ANKERIKA ", "ANKERIKA SUD ", "ZAFIHITA ", "038 55 412 00"],
-                    ["136", "ANTSOHIHY", "ANKERIKA ", "ANDROIBE", "AMBININJARA AMBINIDRAZA ", ""],
-                    ["137", "ANTSOHIHY", "ANKERIKA ", "ANDROIBE", "PATRICE", ""],
-                    ["138", "ANTSOHIHY", "ANKERIKA ", "ANDROIBE", "RAMARIVELO", ""],
-                    ["139", "ANTSOHIHY", "ANKERIKA ", "ANTANAMBAO ANKERIKA", "MANANKASINA FREDO", "034 58 208 33"],
-                    ["140", "ANTSOHIHY", "ANKERIKA ", "ANTANAMBAO ANKERIKA", "MAHATODY EPHIREM", "038 34 588 74"],
-                    ["141", "ANTSOHIHY", "ANKERIKA ", "ANTANAMBAO ANKERIKA", "VOLAMARY GÈLE ODILE ", "034 35 524 52"],
-                    ["142", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBALAHONKO", "BILEHA ERNEST ", ""],
-                    ["143", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBALAHONKO", "RANDRIAMILAZARA VELONTOMBO EDMÉ", ""],
-                    ["144", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBALAHONKO", "ZAZINY ", ""],
-                    ["145", "ANTSOHIHY", "AMPANDRIKILANDY", "AMPANDRIKILANDY", "JAOZAVA ALFRED BERSON", "034 33 813 78"],
-                    ["146", "ANTSOHIHY", "AMPANDRIKILANDY", "AMPANDRIKILANDY", "ROGENAT FELICIE", "034 93 899 51"],
-                    ["147", "ANTSOHIHY", "AMPANDRIKILANDY", "AMPANDRIKILANDY", "RASOLOMIHARY GILBERT ", ""],
-                    ["148", "ANTSOHIHY", "AMPANDRIKILANDY", "ANTANAMBAO SUD", "TOTOMBY ", "034 92 706 02"],
-                    ["149", "ANTSOHIHY", "AMPANDRIKILANDY", "ANTANAMBAO SUD", "ZAFINJARA SOAVILAINE ", ""],
-                    ["150", "ANTSOHIHY", "AMPANDRIKILANDY", "ANTANAMBAO SUD", "RANDRIANASOLO JEAN FREDY ", "038 16 758 19"],
-                    ["151", "ANTSOHIHY", "AMPANDRIKILANDY", "MAROVATO", "NORBERT RANDRIAMAHAZAKA ", "038 64 250 17"],
-                    ["152", "ANTSOHIHY", "AMPANDRIKILANDY", "MAROVATO", "ROGER", ""],
-                    ["153", "ANTSOHIHY", "AMPANDRIKILANDY", "MAROVATO", "ALIHINA", ""],
-                    ["154", "ANTSOHIHY", "AMPANDRIKILANDY", "ANDRAFIA", "ZARAFALY", ""],
-                    ["155", "ANTSOHIHY", "AMPANDRIKILANDY", "ANDRAFIA", "RASOAMANANJARA LUCIENNE", ""],
-                    ["156", "ANTSOHIHY", "AMPANDRIKILANDY", "ANDRAFIA", "NDRIAMIHAJA FLAVIEN", ""],
-                    ["157", "ANTSOHIHY", "AMPANDRIKILANDY", "ANDILAMBE", "RAJAMEVA THIBAUT", "034 11 065 43"],
-                    ["158", "ANTSOHIHY", "AMPANDRIKILANDY", "ANDILAMBE", "LIDA JEAN PAUL ", ""],
-                    ["159", "ANTSOHIHY", "AMPANDRIKILANDY", "ANDILAMBE", "NDRAINARIVO PAUL GREGORY", "034 72 137 71"],
-                    ["160", "ANTSOHIHY", "AMPANDRIKILANDY", "ANTANALABE", "RANDRIANASOLO DEWÉ", "034 56 444 08"],
-                    ["161", "ANTSOHIHY", "AMPANDRIKILANDY", "ANTANALABE", "VELONTONY ERIC ", "038 33 795 55"],
-                    ["162", "ANTSOHIHY", "AMPANDRIKILANDY", "ANTANALABE", "RABENANTENAINA JACKY GEORGES ", ""],
-                    ["163", "ANTSOHIHY", "AMPANDRIKILANDY", "AMBODISATRANA  ", "VELONTSARA THEODORE ", "032 53 608 30"],
-                    ["164", "ANTSOHIHY", "AMPANDRIKILANDY", "AMBODISATRANA  ", "RAZAFINDRABEVAIAVY KARL OFFEMAN ", "032 22 876 31"],
-                    ["165", "ANTSOHIHY", "AMPANDRIKILANDY", "AMBODISATRANA  ", "TSARAVELONA MERSON BENASCONI", "032 77 146 23"],
-                    ["166", "ANTSOHIHY", "AMPANDRIKILANDY", "ANKAZOBETSIHAY", "TSARAZARA ", ""],
-                    ["167", "ANTSOHIHY", "AMPANDRIKILANDY", "ANKAZOBETSIHAY", "LEPERY ", ""],
-                    ["168", "ANTSOHIHY", "AMPANDRIKILANDY", "ANKAZOBETSIHAY", "ZAFILEMITSARA FERMAIN", ""],
-                    ["169", "ANTSOHIHY", "ANTSOHIHY", "AMBALABE OUEST", "RATSARA FRANCOIS NOSELIN ", "032 99 339 09"],
-                    ["170", "ANTSOHIHY", "ANTSOHIHY", "AMBALABE OUEST", "RATSARA IZIDINE LARIOT", "032 39 591 97"],
-                    ["171", "ANTSOHIHY", "ANTSOHIHY", "AMBALABE OUEST", "VITAMANANA MICKAEL MAXIMIN", "034 99 555 52"],
-                    ["200", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRIANA I", "ANGE FLORENTINE RAZANATSOA ", "038 93 412 45"],
-                    ["201", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA I", "ROKIA", "034 96 591 86"],
-                    ["202", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA I", "SOAMANESY ", "038 89 643 34"],
-                    ["203", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA III", "GILDA", "032 51 873 58"],
-                    ["204", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA III", "TELOVAVY NADIA PRISCALINE ", "038 09 599 65"],
-                    ["205", "ANTSOHIHY", "ANJIAMANGIRINA ", "ANJIAMANGIRINA III", "MAINTY JEAN ROBERT ", "037 43 727 28"],
-                    ["206", "ANTSOHIHY", "ANJIAMANGIRINA ", "AMBODIMANGA ", "NOMENA SOATSARA ", "034 27 242 25"],
-                    ["207", "ANTSOHIHY", "ANJIAMANGIRINA ", "AMBODIMANGA ", "RAZAKASON ODEAM ", "034 96 85516"],
-                    ["208", "ANTSOHIHY", "ANJIAMANGIRINA ", "AMBODIMANGA ", "RAZAFINDRASAINA GINETTE ANTIENNE", "034 37 674 43"],
-                    ["209", "ANTSOHIHY", "ANTSOHIHY", "ANKIRIRIKY SUD I", "REVINARISOA ZAFIMILA HONORETTE", ""],
-                    ["210", "ANTSOHIHY", "ANTSOHIHY", "ANKIRIRIKY SUD I", "RAZAFINIRINA FLORISCA", ""],
-                    ["211", "ANTSOHIHY", "ANTSOHIHY", "ANKIRIRIKY SUD I", "MIARINJOKY KILARIE", ""],
-                    ["212", "ANTSOHIHY", "ANTSOHIHY", "ANKIRIRIKY SUD II", "RAZANAMINO CLEMENCE", "038 19 714 63"],
-                    ["213", "ANTSOHIHY", "ANTSOHIHY", "ANKIRIRIKY SUD II", "RAZANAMAHATSARA MYRIELLE LYSIANA", "032 06 687 55"],
-                    ["214", "ANTSOHIHY", "ANTSOHIHY", "ANKIRIRIKY SUD II", "HIARINIAINA MINOARISOA BRIANT FRANCELLE ", "032 77 570 38"],
-                    ["215", "ANTSOHIHY", "AMBODIMADIRO ", "AMBODIMADIRO ", "TIAZARA NORBERT", "032 18 596 19"],
-                    ["216", "ANTSOHIHY", "AMBODIMADIRO ", "AMBODIMADIRO ", "RALAIFENO NACIEL", "038 22 077 29"],
-                    ["217", "ANTSOHIHY", "AMBODIMADIRO ", "AMBODIMADIRO ", "RAJEMISON MARIE GERCOTINE", "034 73  077 42"],
-                    ["218", "ANTSOHIHY", "ANTSAHABE", "AMBODIMAGNA II", "RAVELOMANANA HERINIAINA BERLIOZ", "034 18 706 05"],
-                    ["219", "ANTSOHIHY", "ANTSAHABE", "AMBODIMAGNA II", "CLARICE", "034 42 966 52"],
-                    ["220", "ANTSOHIHY", "ANTSAHABE", "AMBODIMAGNA II", "KOLA", "034 22 985 33"],
-                    ["221", "ANTSOHIHY", "ANTSAHABE", "ANKOBANDRONIA", "TSARAVIANA", "034 88 242 63"],
-                    ["222", "ANTSOHIHY", "ANTSAHABE", "ANKOBANDRONIA", "ZANOELY DEDE", ""],
-                    ["223", "ANTSOHIHY", "ANTSAHABE", "ANKOBANDRONIA", "JEAN NOEL", ""],
-                    ["224", "ANTSOHIHY", "ANTSAHABE", "ANDASIBE ", "ZERIMANA CRISTOPHE", "034 69 408 27"],
-                    ["225", "ANTSOHIHY", "ANTSAHABE", "ANDASIBE", "SYVENETTE RAHARISOAMALALA", "038 23 678 70"],
-                    ["226", "ANTSOHIHY", "ANTSAHABE", "BEMANONDRO", "RALAIAVY  JEAN BENOIT", "034 49 715 55"],
-                    ["227", "ANTSOHIHY", "ANTSAHABE", "BEMANONDRO", "RAVOAMISY JEAN BEMIHARY ", ""],
-                    ["228", "ANTSOHIHY", "ANTSAHABE", "AMPRINGA", "JOCIN ", ""],
-                    ["229", "ANTSOHIHY", "ANTSAHABE", "AMPRINGA", "RANDRIANJARA MOHAMEDE ", "034 39 153 20 "],
-                    ["230", "ANTSOHIHY", "ANTSAHABE", "ANTSIRABE ", "SOARAISY", "034 05 267 61"],
-                    ["231", "ANTSOHIHY", "ANTSAHABE", "ANTSIRABE ", "BEMANANA RALSON", "038 67 322 28 "],
-                    ["232", "ANTSOHIHY", "ANTSAHABE", "ANDENGONDROY", "RANAVOSON SETTE JOSE BIEN AIME", ""],
-                    ["233", "ANTSOHIHY", "ANTSAHABE", "ANDENGONDROY", "RICHIARIVELO FRANCKLIN", ""],
-                    ["234", "ANTSOHIHY", "ANTSAHABE", "ANDENGONDROY", "RANAONIRINA LEANDRETTE ", "034 15 788 80"],
-                    ["301", "ANTSOHIHY", "ANDREBA", "ANKOZANY", "TSARAHEVITRA FERDINAND", "0346046868"],
-                    ["302", "ANTSOHIHY", "ANDREBA", "ANKOZANY", "RASAMSON CLAUDE", "0343733921"],
-                    ["303", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBODIMANDRESY", "CLAUDE", "0340502150"],
-                    ["304", "ANTSOHIHY", "AMBODIMANDRESY ", "AMBODIMANDRESY", "MAURICE ALIDA SYLVERT", "0340698168"],
-                    ["305", "ANTSOHIHY", "AMBODIMANDRESY ", "ANTAMBOHITRA", "BELIN", "0380575971"],
-                    ["306", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "DJAOMANAMBINA", "0387205171"],
-                    ["307", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "AMBININTSOA JUD EZRA", "0384537212"],
-                    ["308", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "NORIZINY", "0341151655"],
-                    ["309", "ANTSOHIHY", "AMBODIMADIRO ", "AMBALASAKOA", "RASOAMANANTSITO GIBRIA", ""],
-                    ["109", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "RASOANIRINA FLORENTINE", "0330567121"],
-                    ["110", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "RAVAOTSINAMPOIZINA FIDISOA JULIE", "0347249298"],
-                    ["111", "MAMPIKONY", "MAMPIKONY I", "BITSINGIALA", "HAINGONIRAINY VALISOA JOELINE", "0346641395"],
-                    ["112", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RAKOTONIRINA JULIEN", "0344706703"],
-                    ["113", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RANDRIAMANANA PATRICIA", "0349723915"],
-                    ["114", "MAMPIKONY", "MAMPIKONY I", "MAHIAGOGO", "RASOANANTENAINA JOSIANE", "0386472512"],
-                    ["115", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "RAZANAMALALA PERLINE", "0324592076/0344580156"],
-                    ["116", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "RASENDRASOA MARIE ANGELE", "03421562181"],
-                    ["117", "MAMPIKONY", "MAMPIKONY I", "TSARARARIVOTRA", "SIKIMBOLANOMENJANAHARY VAVIZOKY JOCELYNE", "0385862181"],
-                    ["118", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "RAHOELY JOCELYN", "0348639973"],
-                    ["119", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "DELPHINE", "0349811502"],
-                    ["120", "MAMPIKONY", "MAMPIKONY I", "ATSINJORANO", "RAZAFINDRAHANTA NOELINE", "0341675230"],
-                    ["121", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "STEPHAN MARIE CANNE", "0347329426/0384280968"],
-                    ["122", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "TOVONAINA LANZIZI", "0341972016"],
-                    ["123", "MAMPIKONY", "MAMPIKONY II", "TSINJOFARY", "SAMINA HELENE", "0341412688/0330905443"],
-                    ["124", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "PAUL FELIX", "0384280933/0341959334"],
-                    ["125", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "TEFINDRAZANA SEBASTIEN", "0383557641"],
-                    ["126", "MAMPIKONY", "MAMPIKONY II", "AMBODISAKOANA I", "RAFANOMEZANTSOA GISELE", "0339588499"],
-                    ["127", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "RAKOTOSONA TOKY PATRICK", "0384280935/0384280933"],
-                    ["128", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "PASCAL", "0381355629"],
-                    ["129", "MAMPIKONY", "MAMPIKONY II", "AMPARIHIKELY", "TARAZANDRY JEAN DAULLIN", "0387219231"],
-                    ["250", "MAMPIKONY", "AMBOHITOAKA", "AMBOHITOAKA", "RAZANADRAHA OLIVIER", "0388258490"],
-                    ["251", "MAMPIKONY", "AMBOHITOAKA", "AMBOHITOAKA", "RABENANDRASANA FERDINAND MICKAEL", "0342230582"],
-                    ["252", "MAMPIKONY", "AMBOHITOAKA", "AMBOHITOAKA", "JEAN CHRISTOPHE", "0388532754"],
-                    ["253", "MAMPIKONY", "AMBOHITOAKA", "AMPANDROANGISA", "SOJAZAFY RAZAFIMANDIMBY", "0340464784"],
-                    ["254", "MAMPIKONY", "AMBOHITOAKA", "AMPANDROANGISA", "ZAFY HELENE", "0341358725"],
-                    ["255", "MAMPIKONY", "AMBOHITOAKA", "AMPANDROANGISA", "EDIVIGE", "0384767386"],
-                    ["256", "MAMPIKONY", "AMBOHITOAKA", "AMBODISATRANA  ", "RABERSON RAZAFY VANORO", "0348917125"],
-                    ["257", "MAMPIKONY", "AMBOHITOAKA", "AMBODISATRANA  ", "BRUNO", "0385042965"],
-                    ["258", "MAMPIKONY", "AMBOHITOAKA", "AMBODISATRANA  ", "RAZANAMIADANA SOALAZA", "0345304420"],
-                    ["259", "MAMPIKONY", "AMBOHITOAKA", "LABANDIKELY", "RAKOTOVAO CHEL", "0346784189"],
-                    ["260", "MAMPIKONY", "AMBOHITOAKA", "LABANDIKELY", "NDRENOELSON JEAN ABEL", "0386689679"],
-                    ["261", "MAMPIKONY", "AMBOHITOAKA", "LABANDIKELY", "VELONORO CELESTIN", "0340958740"],
-                    ["262", "MAMPIKONY", "AMBOHITOAKA", "TSIMIJALY", "DEBOSY", "0385131958"],
-                    ["263", "MAMPIKONY", "AMBOHITOAKA", "TSIMIJALY", "JULIENNE", "0383670954"],
-                    ["264", "MAMPIKONY", "AMBOHITOAKA", "TSIMIJALY", "ZAFITOMBO", ""],
-                    ["265", "MAMPIKONY", "AMBOHITOAKA", "AMBODIMANGA", "TSIADINONDRAZANA ROGINANT", "0348916923"],
-                    ["266", "MAMPIKONY", "AMBOHITOAKA", "AMBODIMANGA", "RABEMANANJARA TALIANE", "0384947310"],
-                    ["267", "MAMPIKONY", "AMBOHITOAKA", "AMBODIMANGA", "RAVELONANDRASANA JACQUELIN", "0388400325"],
-                    ["268", "MAMPIKONY", "AMBOHITOAKA", "ANDRANOMIDITRA", "RAZANADRAVAO FLORENCE", "0385591696"],
-                    ["269", "MAMPIKONY", "AMBOHITOAKA", "ANDRANOMIDITRA", "RAMAROHAVANA JIDANIE", "0383438805"],
-                    ["270", "MAMPIKONY", "AMBOHITOAKA", "ANDRANOMIDITRA", "JAQUINOT", "0386562503"],
-                    ["271", "MAMPIKONY", "AMBOHITOAKA", "ANDILAMBE ", "RAZAFINDRATOMBO MARC ANTOINOT", "0383073123"],
-                    ["272", "MAMPIKONY", "AMBOHITOAKA", "ANDILAMBE ", "ZAFIMIADANA VARTAN", "0384397952"],
-                    ["273", "MAMPIKONY", "AMBOHITOAKA", "ANDILAMBE ", "RASOAFARA CHRISTINE CAROLENCE", "0388531837"],
-                    ["274", "MAMPIKONY", "AMBOHITOAKA", "ANTSIRASIRA II", "RABE CLAUDINE HELENE", "0388979772"],
-                    ["275", "MAMPIKONY", "AMBOHITOAKA", "ANTSIRASIRA II", "ANDRIANIRINA PETER MARTEL", "0386092889"],
-                    ["276", "MAMPIKONY", "AMBOHITOAKA", "ANTSIRASIRA II", "RABEMANANJARA NADIA ELEONORE", "0382400916"],
-                    ["277", "MAMPIKONY", "AMBOHITOAKA", "SOBERAKA", "RABEZARA BERTRAND", "0337259026"],
-                    ["278", "MAMPIKONY", "AMBOHITOAKA", "SOBERAKA", "MISE ALBERT", "0347583394"],
-                    ["279", "MAMPIKONY", "AMBOHITOAKA", "SOBERAKA", "ANDRINIRINA RALIJAONINA VALERIEN", "0340127383"],
-                    ["284", "MAMPIKONY", "AMBOHITOAKA", "TANETILAVA ", "RANDRIANASOLO NAJA  ALEXANDRE ", "034 18 155 54"],
-                    ["285", "MAMPIKONY", "AMBOHITOAKA", "TANETILAVA ", "BOTOSOA JEAN LOUIS ", "034 97 174 87 "],
-                    ["286", "MAMPIKONY", "AMBOHITOAKA", "TANETILAVA ", "RAKOTONDRASINA DESIRE", "038 58 901 17"],
-                    ["287", "MAMPIKONY", "AMBOHITOAKA", "ANDOHARANO ", "BENJARA FLORENT ", ""],
-                    ["288", "MAMPIKONY", "AMBOHITOAKA", "ANDOHARANO ", "RALEX", "038 86 655 22"],
-                    ["289", "MAMPIKONY", "AMBOHITOAKA", "ANDOHARANO ", "RASOANONDRASANA ELIVIA ", "037 58 403 05"],
-                    ["290", "MAMPIKONY", "AMBOHITOAKA", "ANKIJANIBE ", "NATREHINDRAZANA ESTIER REMI FABIA", "038 24 274 12"],
-                    ["291", "MAMPIKONY", "AMBOHITOAKA", "ANKIJANIBE ", "RABETAVANDRAINA NOMENJANAHARY ERLANDO", "034 70 996 44"],
-                    ["292", "MAMPIKONY", "AMBOHITOAKA", "ANKIJANIBE ", "ZANATSARA VIVIANNE ", "038 12 328 69"],
-                    ["293", "MAMPIKONY", "AMBOHITOAKA", "ANKATOKA ", "RAKOTOMALALA JEAN DE DIEU DONNE ", "033 32 592 39 "],
-                    ["294", "MAMPIKONY", "AMBOHITOAKA", "ANKATOKA ", "RAHERISOA GIBELINE YOLANDE ", "034 04 425 08 "],
-                    ["295", "MAMPIKONY", "AMBOHITOAKA", "ANKATOKA ", "RAVONIARISOA FANANTENANA JULIA ", "038 16 339 38"],
-                    ["296", "MAMPIKONY", "AMBOHITOAKA", "ANTSOHELY ", "RALAIARIMANANA RAMIEN LANTO", "038 36 572 90"],
-                    ["297", "MAMPIKONY", "AMBOHITOAKA", "ANTSOHELY ", "VAVIMAMY NAVINA", "038 27 185 87"],
-                    ["298", "MAMPIKONY", "AMBOHITOAKA", "ANTSOHELY ", "RANDRIANOELY NOUCELA", "038 76 027 19"],
-                    ["299", "MAMPIKONY", "AMBOHITOAKA", "BEKITOTO", "RAKOTONIAINA MODESTE ", "034 96 702 58"],
-                    ["300", "MAMPIKONY", "AMBOHITOAKA", "BEKITOTO", "ANDRIANIRINA MAMITIANA CRÉTELE", "034 13 360 31"],
-                    ["235", "PORT-BERGE", "PORT-BERGE II", "LABANDY", "RAMILI JENNY SANDRA", "034 70 687 93"],
-                    ["236", "PORT-BERGE", "PORT-BERGE II", "LABANDY", "RAZAFINDRABAO ROBERTINE", "034 07 918 72"],
-                    ["237", "PORT-BERGE", "PORT-BERGE II", "LABANDY", "RASOANANDRASANA LOUISE", "038 41 158 94"],
-                    ["238", "PORT-BERGE", "PORT-BERGE II", "ANTANAMBAOVAO", "ZARAMANANA BERNARD ANDRONIQUE", "034 46 784 12"],
-                    ["239", "PORT-BERGE", "PORT-BERGE II", "ANTANAMBAOVAO", "TSARAHOSY PAQUERETTE ZOEE", "034 27 103 60"],
-                    ["240", "PORT-BERGE", "PORT-BERGE II", "ANTANAMBAOVAO", "RABEMAHAFALY SOAZAFY BERIKA", "038 98 028 67"],
-                    ["241", "PORT-BERGE", "PORT-BERGE II", "PORT-BERGE BAS", "NORDINE JEAN", "034 37 275 12"],
-                    ["242", "PORT-BERGE", "PORT-BERGE II", "PORT-BERGE BAS", "RAZANAMIANDRISOA ELODIE", "034 67 438 21"],
-                    ["243", "PORT-BERGE", "PORT-BERGE II", "PORT-BERGE BAS", "RASOLONDRAMASY FLAVIEN", "034 03 744 56"],
-                    ["244", "PORT-BERGE", "AMPARIHY", "AMPARIHY", "ANTONJARA TILAHY ABEL", "034 02 442 20"],
-                    ["245", "PORT-BERGE", "AMPARIHY", "AMPARIHY", "FALIMAMY JEAN CHRY ", "038 07 750 86"],
-                    ["246", "PORT-BERGE", "AMPARIHY", "AMPARIHY", "FALISOA ", "034 99 576 12"],
-                    ["247", "PORT-BERGE", "PORT-BERGE II", "MAROMALANDY", "AMBININJARA MARIUS ETORI", "034 90 950 46"],
-                    ["248", "PORT-BERGE", "PORT-BERGE II", "MAROMALANDY", "JEAN SELINA", "034 87 624 54"],
-                    ["249", "PORT-BERGE", "PORT-BERGE II", "MAROMALANDY", "TODISOA HASINA BRUNO", "034 55 486 55"],
-                    ["172", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "RASOA MALALA FIDELINE", ""],
-                    ["173", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "JAOZOKY ", ""],
-                    ["174", "PORT-BERGÉ", "TSARAHASINA", "TSARAHASINA", "SOLANGE", ""],
-
-
-                ],
-
-            },
-            2025: {
-                "Prévision": "Texte prévision 2025",
-                "Intervention": "Texte intervention 2025",
-                "Rapport": "Texte rapport 2025",
-                "Évaluation": "Texte évaluation 2025",
-                "Conclusion": "Texte conclusion 2025"
-            }
-            // Ajoute les autres années de la même façon
+            ],
+            2026: [
+                "Activité A", "Activité B", "Activité C", "Activité D", "Activité E",
+                "Activité F", "Activité G", "Activité H", "Activité I", "Activité J"
+            ],
+            2027: [
+                "Activité 1", "Activité 2", "Activité 3", "Activité 4", "Activité 5",
+                "Activité 6", "Activité 7", "Activité 8", "Activité 9", "Activité 10"
+            ],
+            2028: [
+                "Activité 1", "Activité 2", "Activité 3", "Activité 4", "Activité 5",
+                "Activité 6", "Activité 7", "Activité 8", "Activité 9", "Activité 10"
+            ]
         };
 
-        // ===== Variables =====
-        let activeYear = null;
-        let activeActivity = null;
+        const contentData = {
 
-        // ===== Afficher sub-boutons =====
-        function showYear(year, btn) {
-            document.querySelectorAll(".main-buttons button").forEach(b => b.classList.remove("active-year"));
-            btn.classList.add("active-year");
+            "2024-0": `
+    <p>Reunion menée au niveau des 4 chefs lieu de district avec les membres CRM.</p>
+    <div class="row">
+    <table>
+      <tr><th>COMMUNE</th><th>Nbr FOKONTANY</th><th>Nbr ANTENNE</th></tr>
+      <tr><td>ANDREVOREVO</td><td class="number">5</td><td class="number">11</td></tr>
+      <tr><td>ANKARAMY BE</td><td class="number">9</td><td class="number">21</td></tr>
+      <tr><td>BEFOTAKA NORD</td><td class="number">15</td><td class="number">51</td></tr>
+      <tr><td>MAROMANDIA</td><td class="number">8</td><td class="number">25</td></tr>
+      <tr><td>MAROVANTAZA</td><td class="number">7</td><td class="number">23</td></tr>
+      <tr><td>AMBODIMADIRO </td><td class="number">2</td><td class="number">7</td></tr>
+      <tr><td>AMBODIMANDRESY </td><td class="number">3</td><td class="number">6</td></tr>
+      <tr><td>AMPANDRIKILANDY</td><td class="number">8</td><td class="number">24</td></tr>
+      <tr><td>ANDREBA</td><td class="number">1</td><td class="number">2</td></tr>
+      <tr><td>ANJIAMANGIRINA </td><td class="number">4</td><td class="number">9</td></tr>
+      <tr><td>ANKERIKA </td><td class="number">6</td><td class="number">18</td></tr>
+      <tr><td>ANTSAHABE</td><td class="number">8</td><td class="number">17</td></tr>
+      <tr><td>ANTSOHIHY</td><td class="number">3</td><td class="number">9</td></tr>
+      <tr><td>AMBOHITOAKA</td><td class="number">16</td><td class="number">47</td></tr>
+      <tr><td>MAMPIKONY I</td><td class="number">4</td><td class="number">12</td></tr>
+      <tr><td>MAMPIKONY II</td><td class="number">3</td><td class="number">9</td></tr>
+      <tr><td>AMPARIHY</td><td class="number">1</td><td class="number">3</td></tr>
+      <tr><td>PORT-BERGE II</td><td class="number">4</td><td class="number">12</td></tr>
+      <tr><td>TSARAHASINA</td><td class="number">2</td><td class="number">3</td></tr>
+      <tr><td class="total"><strong>TOTAL</strong></td><td class="total"><strong>109</strong></td><td class="total"><strong>309</strong></td></tr>
+        </table>
 
-            activeYear = year;
+    <img src="antenne.png" class="side-image">
 
-            const sub = document.getElementById("subContainer");
-            const box = document.getElementById("contentBox");
-            box.style.display = "none";
-            sub.innerHTML = "";
-            sub.style.display = "block";
+</div>
+<br>
 
-            for (let name in data[year]) {
-                sub.innerHTML += `<button onclick="showContent(${year},'${name}',this)">${name}</button>`;
-            }
-        }
+    <a class="file-link" href="Listedesantennes.xlsx" download>
+      Listedesantennes.xlsx
+    </a>
+  `,
 
-        // ===== Afficher contenu =====
-        function showContent(year, name, btn) {
-            activeActivity = name;
+            "2024-1": `
+    <p>No information.</p>
+  `,
+            "2025-0": `
+    <p>d </p>Ateliers ménés dans les 18 chefs lieux de commune.
+    <div class="row">
+     <table>
+         <tr><th>DISTRICT</th><th>COMMUNE</th><th>Nbr FOKONTANY</th></tr>
+         <tr><td>ANALALAVA</td><td>ANKARAMY</td><td class="number">4</td></tr>
+         <tr><td>ANALALAVA</td><td>BEFOTAKA</td><td class="number">9</td></tr>
+     <tr><td>ANALALAVA</td><td>MAROMANDIA</td><td class="number">9</td></tr>
+     <tr><td>ANALALAVA</td><td>MAROVANTAZA</td><td class="number">6</td></tr>
+     <tr><td>ANTSOHIHY</td><td>AMBODIMADIRO</td><td class="number">7</td></tr>
+     <tr><td>ANTSOHIHY</td><td>AMBODIMANDRESY</td><td class="number">6</td></tr>
+     <tr><td>ANTSOHIHY</td><td>AMPANDRIAKILANDY</td><td class="number">6</td></tr>
+     <tr><td>ANTSOHIHY</td><td>ANDREBA</td><td class="number">8</td></tr>
+     <tr><td>ANTSOHIHY</td><td>ANJIAMANGIRANA</td><td class="number">6</td></tr>
+     <tr><td>ANTSOHIHY</td><td>ANKERIKA</td><td class="number">5</td></tr>
+     <tr><td>ANTSOHIHY</td><td>ANTSAHABE</td><td class="number">12</td></tr>
+     <tr><td>ANTSOHIHY</td><td>ANTSOHIHY</td><td class="number">7</td></tr>
+     <tr><td>MAMPIKONY</td><td>AMBOHITOAKA</td><td class="number">12</td></tr>
+     <tr><td>MAMPIKONY</td><td>MAMPIKONY1</td><td class="number">5</td></tr>
+     <tr><td>MAMPIKONY</td><td>MAMPIKONY2</td><td class="number">6</td></tr>
+     <tr><td>PORT BERGÉ</td><td>AMPARIHY</td><td class="number">5</td></tr>
+     <tr><td>PORT BERGÉ</td><td>PORT BERGÉ II</td><td class="number">8</td></tr>
+     <tr><td>PORT BERGÉ</td><td>TSARAHASINA</td><td class="number">6</td></tr>
+     <tr><td class="total"><strong>TOTAL</strong></td><td class="total"><strong>19</strong></td><td class="total"><strong>130</strong></td></tr>
+      </table>
 
-            document.querySelectorAll(".sub-buttons button").forEach(b => b.classList.remove("active"));
+  <img src="ParticipantsEVCA.png" class="side-image">
+
+</div>
+<a class="file-link" href="CalendrierAtelierEVCA.xlsx" download>
+ CalendrierAtelierEVCA.xlsx
+</a><br>
+<a class="file-link" href="Liste130fktEVCA_2025.xlsx" download>
+ Liste130fktEVCA_2025.xlsx
+</a><br>
+<a class="file-link" href="OutilsEVCA.xlsx" download>
+ OutilsEVCA.xlsx
+</a><br>
+<a class="file-link" href="FanadihadianaEVCAMAJ13022025.docx" download>
+ FanadihadianaEVCAMAJ13022025.docx
+ </a><br>
+ <a class="file-link" href="SaisieInterviewEVCA.xlsx" download>
+ SaisieInterviewEVCA.xlsx
+</a><br>
+<a class="file-link" href="SaiseFlipEVCA_1ere vague.xlsx" download>
+ SaiseFlipEVCA_1ere_vague.xlsx
+</a><br>
+<a class="file-link" href="SaiseFlipEVCA_2eme vague.xlsx" download>
+ SaiseFlipEVCA_2eme_vague.xlsx
+</a><br>
+<a class="file-link" href="SaiseFlipEVCA_3eme vague.xlsx" download>
+ SaiseFlipEVCA_3eme_vague.xlsx
+</a>
+`,
+        };
+
+        const yearContainer = document.getElementById("years");
+        const activityContainer = document.getElementById("activities");
+        const contentBox = document.getElementById("content");
+
+
+        let selectedYear = null;
+
+        years.forEach(year => {
+            const btn = document.createElement("button");
+            btn.textContent = year;
+            btn.onclick = () => selectYear(btn, year);
+            yearContainer.appendChild(btn);
+        });
+
+        function selectYear(btn, year) {
+            clearActive(yearContainer);
             btn.classList.add("active");
 
-            const box = document.getElementById("contentBox");
-            box.style.display = "block";
+            selectedYear = year;
+            activityContainer.innerHTML = "";
+            contentBox.innerHTML = "";
 
-            const content = data[year][name];
+            activitiesByYear[year].forEach((name, index) => {
+                const b = document.createElement("button");
+                b.textContent = name;
+                b.onclick = () => selectActivity(b, index);
+                activityContainer.appendChild(b);
+            });
+        }
 
-            // Si c'est un tableau
-            if (Array.isArray(content)) {
+        function selectActivity(btn, index) {
 
-                // ===== TABLEAU 3 COLONNES =====
-                let t1 = `<table class="small-table">
-    <thead>
-      <tr>
-        <th>N°</th>
-        <th>Commune</th>
-        <th>Nb Fokontany</th>
-        <th>Nb Volontaire antenne</th>
-      </tr>
-    </thead>
-    <tbody>`;
+            clearActive(activityContainer);
+            btn.classList.add("active");
 
-                smallTable2024.forEach(r => {
-                    t1 += `<tr>
-      <td>${r[0]}</td>
-      <td>${r[1]}</td>
-      <td>${r[2]}</td>
-      <td>${r[3]}</td>
-    </tr>`;
-                });
+            const key = selectedYear + "-" + index;
 
-                t1 += `</tbody></table><br><br>`;
+            contentBox.innerHTML = contentData[key] ||
+                "<p>Aucun contenu pour cette activité.</p>";
+        }
 
-                // ===== TABLEAU 6 COLONNES =====
-                let t2 = `<table>
-    <thead>
-      <tr>
-        <th>District</th>
-        <th>Commune</th>
-        <th>Fokontany</th>
-        <th>ID_unité</th>
-        <th>Nom et prénom</th>
-        <th>Contact</th>
-      </tr>
-    </thead>
-    <tbody>`;
-
-                content.forEach(r => {
-                    t2 += `<tr>
-      <td>${r[0]}</td>
-      <td>${r[1]}</td>
-      <td>${r[2]}</td>
-      <td>${r[3]}</td>
-      <td>${r[4]}</td>
-      <td>${r[5]}</td>
-    </tr>`;
-                });
-
-                t2 += `</tbody></table>`;
-
-                box.innerHTML = `
-<div class="tables-row">
-   <div class="table-left">${t1}</div>
-   <div class="table-right">${t2}</div>
-</div>`;
-            }
+        function clearActive(container) {
+            [...container.children].forEach(b => b.classList.remove("active"));
         }
     </script>
-
 </body>
+
+</html>
 
 </html>
